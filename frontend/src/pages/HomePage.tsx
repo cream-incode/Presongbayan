@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 function HomePage() {
     return (
       <div className="min-h-screen bg-[#FAF7F0] text-[#252C28]">
@@ -14,21 +15,29 @@ function HomePage() {
             </a>
   
             <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-              <a href="#" className="text-[#286247]">Home</a>
-              <a href="#" className="text-[#68746D] hover:text-[#286247]">
+              <Link to="/" className="text-[#286247]">
+                Home
+              </Link>
+
+              <Link to="/compare-prices" className="text-[#68746D] hover:text-[#286247]">
                 Compare Prices
-              </a>
-              <a href="#" className="text-[#68746D] hover:text-[#286247]">
+              </Link>
+
+              <Link to="/shopping-list" className="text-[#68746D] hover:text-[#286247]">
                 Shopping List
-              </a>
-              <a href="#" className="text-[#68746D] hover:text-[#286247]">
+              </Link>
+
+              <Link to="/meal-planner" className="text-[#68746D] hover:text-[#286247]">
                 Meal Planner
-              </a>
+              </Link>
             </nav>
   
-            <button className="rounded-lg bg-[#286247] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1C4635]">
+            <Link
+              to="/login"
+              className="rounded-lg bg-[#286247] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1C4635]"
+            >
               Sign In
-            </button>
+            </Link>
           </div>
         </header>
   
