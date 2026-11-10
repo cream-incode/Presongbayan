@@ -8,6 +8,7 @@ import VendorPricesPage from './pages/VendorPricesPage'
 import AdminReviewPage from './pages/AdminReviewPage'
 import ShoppingListPage from './pages/ShoppingListPage'
 import MealPlannerPage from './pages/MealPlannerPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/admin/review" element={<AdminReviewPage />} />
         <Route path="/shopping-list" element={<ShoppingListPage />} />
         <Route path="/meal-planner" element={<MealPlannerPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )
