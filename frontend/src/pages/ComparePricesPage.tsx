@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 
 function ComparePricesPage() {
@@ -107,17 +107,17 @@ const productGroups = [
             PresyongBayan
           </h1>
 
-          <nav className="flex gap-6 text-sm font-medium">
-            <a href="/" className="hover:text-[#286247]">
-              Home
-            </a>
-            <a href="/compare-prices" className="text-[#286247]">
-              Compare Prices
-            </a>
-            <a href="/shopping-list" className="hover:text-[#286247]">
-              Shopping List
-            </a>
-          </nav>
+          <nav className="flex gap-5 text-sm font-medium">
+            <Link to="/" className="hover:text-[#286247]">
+                Home
+            </Link>
+            <Link to="/compare-prices" className="text-[#286247]">
+                Compare Prices
+            </Link>
+            <Link to="/shopping-list" className="hover:text-[#286247]">
+                Shopping List
+            </Link>
+            </nav>
         </div>
       </header>
 

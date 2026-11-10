@@ -5,14 +5,14 @@ function HomePage() {
         {/* Navigation */}
         <header className="border-b border-[#E5E1D7] bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-            <a href="#" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#286247] text-xl font-bold text-white">
                 P
               </div>
               <span className="text-xl font-bold tracking-tight">
                 Presyong<span className="text-[#286247]">Bayan</span>
               </span>
-            </a>
+            </Link>
   
             <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
               <Link to="/" className="text-[#286247]">
@@ -125,9 +125,9 @@ function HomePage() {
                   Check product prices from different vendors and markets before
                   deciding where to buy.
                 </p>
-                <a href="#" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
+                <Link to="/compare-prices" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
                   Explore prices →
-                </a>
+                </Link>
               </article>
   
               <article className="rounded-2xl border border-[#E5E1D7] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md">
@@ -139,9 +139,9 @@ function HomePage() {
                   Estimate your total expenses and keep track of your shopping
                   budget.
                 </p>
-                <a href="#" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
+                <Link to="/shopping-list" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
                   Plan your budget →
-                </a>
+                </Link>
               </article>
   
               <article className="rounded-2xl border border-[#E5E1D7] bg-white p-6 transition hover:-translate-y-1 hover:shadow-md">
@@ -153,9 +153,9 @@ function HomePage() {
                   Discover meal suggestions based on your available budget and
                   household needs.
                 </p>
-                <a href="#" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
+                <Link to="/meal-planner" className="mt-5 inline-block text-sm font-semibold text-[#286247]">
                   Discover meals →
-                </a>
+                </Link>
               </article>
             </div>
           </section>

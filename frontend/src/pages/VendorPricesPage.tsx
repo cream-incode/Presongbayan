@@ -1,5 +1,5 @@
-
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 type PriceListing = {
   id: number
@@ -112,13 +112,13 @@ function VendorPricesPage() {
           </h1>
 
           <nav className="flex gap-5 text-sm font-medium">
-            <a href="/" className="hover:text-[#286247]">
-              Home
-            </a>
-            <a href="/compare-prices" className="hover:text-[#286247]">
-              Compare Prices
-            </a>
-          </nav>
+        <Link to="/" className="hover:text-[#286247]">
+            Home
+        </Link>
+        <Link to="/compare-prices" className="hover:text-[#286247]">
+            Compare Prices
+        </Link>
+        </nav>
         </div>
       </header>
 
