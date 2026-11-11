@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import Navbar from '../components/Navbar'
 
 function ComparePricesPage() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -101,25 +101,13 @@ const productGroups = [
 
   return (
     <main className="min-h-screen bg-[#FAF7F0] text-[#252C28]">
-      <header className="border-b border-[#E5E1D7] bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <h1 className="text-2xl font-bold text-[#286247]">
-            PresyongBayan
-          </h1>
-
-          <nav className="flex gap-5 text-sm font-medium">
-            <Link to="/" className="hover:text-[#286247]">
-                Home
-            </Link>
-            <Link to="/compare-prices" className="text-[#286247]">
-                Compare Prices
-            </Link>
-            <Link to="/shopping-list" className="hover:text-[#286247]">
-                Shopping List
-            </Link>
-            </nav>
-        </div>
-      </header>
+  <Navbar
+    links={[
+      { label: 'Home', path: '/' },
+      { label: 'Compare Prices', path: '/compare-prices' },
+      { label: 'Shopping List', path: '/shopping-list' },
+    ]}
+  />
 
       <section className="mx-auto max-w-7xl px-6 py-12">
         <h2 className="text-3xl font-bold">

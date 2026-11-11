@@ -1,46 +1,20 @@
 import { Link } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 function HomePage() {
     return (
       <div className="min-h-screen bg-[#FAF7F0] text-[#252C28]">
         {/* Navigation */}
-        <header className="border-b border-[#E5E1D7] bg-white">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#286247] text-xl font-bold text-white">
-                P
-              </div>
-              <span className="text-xl font-bold tracking-tight">
-                Presyong<span className="text-[#286247]">Bayan</span>
-              </span>
-            </Link>
-  
-            <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-              <Link to="/" className="text-[#286247]">
-                Home
-              </Link>
+        <Navbar
+          variant="branded"
+          showSignIn
+          links={[
+            { label: 'Home', path: '/' },
+            { label: 'Compare Prices', path: '/compare-prices' },
+            { label: 'Shopping List', path: '/shopping-list' },
+            { label: 'Meal Planner', path: '/meal-planner' },
+          ]}
+        />
 
-              <Link to="/compare-prices" className="text-[#68746D] hover:text-[#286247]">
-                Compare Prices
-              </Link>
-
-              <Link to="/shopping-list" className="text-[#68746D] hover:text-[#286247]">
-                Shopping List
-              </Link>
-
-              <Link to="/meal-planner" className="text-[#68746D] hover:text-[#286247]">
-                Meal Planner
-              </Link>
-            </nav>
-  
-            <Link
-              to="/login"
-              className="rounded-lg bg-[#286247] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#1C4635]"
-            >
-              Sign In
-            </Link>
-          </div>
-        </header>
-  
         <main className="mx-auto max-w-7xl px-6 py-12">
           {/* Hero */}
           <section className="grid items-center gap-10 py-10 md:grid-cols-2">
