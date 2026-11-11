@@ -1,30 +1,27 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-
-type Product = {
-  id: number
-  name: string
-  price: number
-  unit: string
-}
+import { products, type Product } from '../data/ingredients'
 
 type ShoppingItem = Product & {
   quantity: number
 }
 
 function ShoppingListPage() {
-  const products: Product[] = [
-    { id: 1, name: 'Regular Rice', price: 48, unit: 'kg' },
-    { id: 2, name: 'White Eggs', price: 9, unit: 'piece' },
-    { id: 3, name: 'Tomatoes', price: 65, unit: 'kg' },
-    { id: 4, name: 'Chicken', price: 180, unit: 'kg' },
-    { id: 5, name: 'Cooking Oil', price: 95, unit: 'liter' },
-  ]
+  const location = useLocation()
 
-  const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([])
+  const incomingState = location.state as {
+    ingredients?: ShoppingItem[]
+    mealName?: string
+  } | null
+
+  const [shoppingList, setShoppingList] = useState<ShoppingItem[]>(
+    () => incomingState?.ingredients ?? []
+  )
+
   const [selectedProduct, setSelectedProduct] = useState('1')
   const [quantity, setQuantity] = useState('1')
-
+  
   function handleAddItem(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -156,7 +153,7 @@ function ShoppingListPage() {
                     <h4 className="font-bold">{item.name}</h4>
 
                     <p className="mt-1 text-sm text-[#68746D]">
-                      {item.quantity} {item.unit} × ₱{item.price.toFixed(2)}
+                    {Number(item.quantity.toFixed(2))} {item.unit} × ₱{item.price.toFixed(2)}
                     </p>
 
                     <p className="mt-2 font-semibold text-[#286247]">

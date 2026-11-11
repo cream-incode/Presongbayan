@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { mealIngredients, products } from '../data/ingredients'
 
 const meals = [
   {
+    
     name: 'Chicken Adobo',
     category: 'Chicken',
     cost: 65,
@@ -29,6 +31,39 @@ const meals = [
 ]
 
 function MealPlannerPage() {
+
+  const navigate = useNavigate()
+
+  function handleAddIngredients(mealName: string) {
+    const ingredients = (mealIngredients[mealName] ?? []).flatMap(
+      (ingredient) => {
+        const product = products.find(
+          (item) => item.id === ingredient.productId
+        )
+
+        return product
+          ? [
+              {
+                ...product,
+                quantity: ingredient.quantity * Number(householdSize),
+              },
+            ]
+          : []
+      }
+    )
+
+    if (ingredients.length === 0) {
+      return
+    }
+
+    navigate('/shopping-list', {
+      state: {
+        ingredients,
+        mealName,
+      },
+    })
+  }
+
   const [budget, setBudget] = useState('200')
   const [householdSize, setHouseholdSize] = useState('2')
   const [preference, setPreference] = useState('All')
@@ -36,13 +71,26 @@ function MealPlannerPage() {
   const totalBudget = Number(budget)
   const people = Number(householdSize)
 
+  const isBudgetValid =
+    budget.trim() !== '' &&
+    Number.isFinite(totalBudget) &&
+    totalBudget >= 1
+
+const isHouseholdSizeValid =
+    Number.isInteger(people) && people >= 1
+
   const suggestedMeals = meals.filter((meal) => {
     const matchesPreference =
       preference === 'All' || meal.category === preference
 
     const estimatedCost = meal.cost * people
 
-    return matchesPreference && estimatedCost <= totalBudget
+    return (
+      isBudgetValid &&
+      isHouseholdSizeValid &&
+      matchesPreference &&
+      estimatedCost <= totalBudget
+    )
   })
 
   return (
@@ -79,6 +127,7 @@ function MealPlannerPage() {
               <input
                 type="number"
                 min="1"
+                step="0.01"
                 value={budget}
                 onChange={(event) => setBudget(event.target.value)}
                 className="w-full rounded-lg border border-[#E5E1D7] px-4 py-3 outline-none focus:border-[#286247]"
@@ -90,6 +139,8 @@ function MealPlannerPage() {
                 Household Size
               </label>
               <input
+                step="1"
+                required
                 type="number"
                 min="1"
                 value={householdSize}
@@ -126,6 +177,28 @@ function MealPlannerPage() {
             </span>
           </div>
 
+          {!isHouseholdSizeValid && (
+            <div className="mt-5 rounded-xl border border-[#C96F52] bg-[#FFF0EA] p-5">
+              <p className="font-semibold text-[#C96F52]">
+                Invalid household size
+              </p>
+              <p className="mt-2 text-sm text-[#68746D]">
+                Please enter a whole number of at least 1 person.
+              </p>
+            </div>
+          )}
+
+          {!isBudgetValid && (
+            <div className="mt-5 rounded-xl border border-[#C96F52] bg-[#FFF0EA] p-5">
+              <p className="font-semibold text-[#C96F52]">
+                Invalid budget
+              </p>
+              <p className="mt-2 text-sm text-[#68746D]">
+                Please enter a valid budget of at least ₱1.
+              </p>
+            </div>
+          )}
+
           <div className="mt-5 grid gap-5 md:grid-cols-2">
             {suggestedMeals.map((meal) => (
               <article
@@ -152,10 +225,19 @@ function MealPlannerPage() {
                     ₱{(meal.cost * people).toFixed(2)}
                   </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleAddIngredients(meal.name)}
+                  className="mt-5 w-full rounded-xl bg-[#286247] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#1C4635]"
+                >
+                  Add Ingredients to Shopping List
+                </button>
               </article>
             ))}
 
-            {suggestedMeals.length === 0 && (
+              {isBudgetValid &&
+                isHouseholdSizeValid &&
+                suggestedMeals.length === 0 && (
               <div className="rounded-xl border border-[#E5E1D7] bg-white p-6 md:col-span-2">
                 <p className="font-semibold text-[#252C28]">
                   No meals found within your budget.

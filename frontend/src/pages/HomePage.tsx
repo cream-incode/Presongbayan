@@ -34,12 +34,19 @@ function HomePage() {
               </p>
   
               <div className="mt-8 flex flex-wrap gap-3">
-                <button className="rounded-lg bg-[#286247] px-6 py-3 font-semibold text-white hover:bg-[#1C4635]">
-                  Compare Prices
-                </button>
-                <button className="rounded-lg border border-[#286247] px-6 py-3 font-semibold text-[#286247] hover:bg-[#286247]/5">
-                  Explore Meal Planner
-                </button>
+              <Link
+                to="/compare-prices"
+                className="rounded-lg bg-[#286247] px-6 py-3 font-semibold text-white hover:bg-[#1C4635]"
+              >
+                Compare Prices
+              </Link>
+
+              <Link
+                to="/meal-planner"
+                className="rounded-lg border border-[#286247] px-6 py-3 font-semibold text-[#286247] hover:bg-[#286247]/5"
+              >
+                Explore Meal Planner
+              </Link>
               </div>
             </div>
   
