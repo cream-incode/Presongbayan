@@ -10,18 +10,26 @@ function RegisterPage() {
   const [role, setRole] = useState('customer')
   const [message, setMessage] = useState('')
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match.')
-      return
-    }
+		if (password !== confirmPassword) {
+			setMessage("Passwords do not match.");
+			return;
+		}
 
-    setMessage(
-      'Registration form completed. Account creation is not connected yet.'
-    )
-  }
+		try {
+			const response = await fetch("http://localhost:5000/api/auth/register", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ fullName, email, password, role }),
+			});
+			const data = await response.json();
+			setMessage(data.message);
+		} catch {
+			setMessage("Cannot reach the server. Please try again.");
+		}
+	}
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#FAF7F0] px-6 py-12 text-[#252C28]">

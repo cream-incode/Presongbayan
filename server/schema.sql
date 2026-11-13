@@ -1,12 +1,27 @@
 CREATE DATABASE IF NOT EXISTS presyongbayan;
 USE presyongbayan;
 
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(150) NOT NULL UNIQUE,
+CREATE TABLE IF NOT EXISTS admin (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name     VARCHAR(120) NOT NULL,
+  email         VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  role ENUM('admin', 'vendor', 'customer') NOT NULL DEFAULT 'customer',
-  is_approved BOOLEAN NOT NULL DEFAULT FALSE, -- admin approves vendors
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+  created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+ 
+CREATE TABLE IF NOT EXISTS vendor (
+  id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name       VARCHAR(120) NOT NULL,
+  email           VARCHAR(190) NOT NULL UNIQUE,
+  password_hash   VARCHAR(255) NOT NULL,
+  approval_status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+  created_at      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+ 
+CREATE TABLE IF NOT EXISTS customer (
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  full_name     VARCHAR(120) NOT NULL,
+  email         VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;

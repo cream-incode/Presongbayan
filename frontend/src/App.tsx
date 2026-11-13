@@ -9,10 +9,13 @@ import AdminReviewPage from './pages/AdminReviewPage'
 import ShoppingListPage from './pages/ShoppingListPage'
 import MealPlannerPage from './pages/MealPlannerPage'
 import NotFoundPage from './pages/NotFoundPage'
+import { AuthProvider } from "./context/AuthContext";
+
 
 function App() {
   return (
     <BrowserRouter>
+    <AuthProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/compare-prices" element={<ComparePricesPage />} />
@@ -24,6 +27,7 @@ function App() {
         <Route path="/meal-planner" element={<MealPlannerPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
