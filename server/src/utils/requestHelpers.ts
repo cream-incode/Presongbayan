@@ -6,6 +6,11 @@ export function getVendorId(req: Request): number {
 	return Number((req as any).user?.id); // (req as any) because Express's Request type doesn't know about .user. the ?. avoids a crash if it's missing.
 }
 
+// same idea as getVendorId but for the admin routes. ASSUMPTION: requireAuth('admin') puts the decoded token on req.user with an id field too.
+export function getAdminId(req: Request): number {
+	return Number((req as any).user?.id); // reads the logged-in admin's id from the token. the ?. avoids a crash when user is missing.
+}
+
 // one place for turning errors into http responses so the controllers don't repeat this. we keep it in utils so the controllers stay short.
 export function sendError(res: Response, error: unknown, fallback: string) {
 	if (error instanceof ServiceError) {

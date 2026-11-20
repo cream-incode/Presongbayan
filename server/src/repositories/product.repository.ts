@@ -13,7 +13,7 @@ export class MySqlProductRepository implements IProductReader, IProductWriter {
 	async findByVendor(vendorId: number): Promise<Product[]> {
 		const [rows] = await db.query<RowDataPacket[]>( // runs the select.
 			`SELECT p.id, p.stall_id, p.category_id, p.product_name, p.brand,
-              p.package_size, p.unit, p.current_price, p.is_available, p.last_updated
+              p.package_size, p.unit, p.current_price, p.is_available, p.approval_status, p.last_updated
        FROM product p
        JOIN stall s ON p.stall_id = s.id
        WHERE s.vendor_id = ?`, // the JOIN connects each product to its stall, and WHERE s.vendor_id keeps only this vendor's products. that's how ownership works with no vendor_id on PRODUCT.
@@ -31,6 +31,7 @@ export class MySqlProductRepository implements IProductReader, IProductWriter {
 			unit: row.unit, // unit needs no conversion.
 			currentPrice: Number(row.current_price), // same DECIMAL-to-number conversion for the price.
 			isAvailable: Boolean(row.is_available), // MySQL stores booleans as 0 or 1. Boolean() turns that into true or false.
+			approvalStatus: row.approval_status, // the review status. the vendor sees it so they know if the admin approved the product yet.
 			lastUpdated: row.last_updated, // the datetime stays as it is.
 		}));
 	}

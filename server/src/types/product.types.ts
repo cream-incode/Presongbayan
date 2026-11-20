@@ -1,3 +1,5 @@
+import { ApprovalStatus } from "./vendor.types"; // reusing the pending/approved/rejected type so the product can carry its review status.
+
 // shape of a product sent to the frontend. it matches the PRODUCT table in your ERD, just in camelCase.
 export interface Product {
 	id: number; // the product's primary key (the id column).
@@ -9,6 +11,7 @@ export interface Product {
 	unit: string; // unit, like kg or piece. it goes together with packageSize.
 	currentPrice: number; // current_price, the live price shown to customers.
 	isAvailable: boolean; // is_available, true means in stock. the vendor can flip it.
+	approvalStatus: ApprovalStatus; // pending, approved or rejected. new products start as pending until an admin reviews them.
 	lastUpdated: string; // last_updated, when the row last changed. the db sets it with NOW().
 }
 

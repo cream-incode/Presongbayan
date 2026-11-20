@@ -50,19 +50,23 @@ CREATE TABLE IF NOT EXISTS stall (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS product (
-  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- product id.
-  stall_id      INT UNSIGNED NOT NULL, -- the stall that sells it. the owner is found through this since product has no vendor_id.
-  category_id   INT UNSIGNED NOT NULL, -- the category it belongs to.
-  product_name  VARCHAR(150) NOT NULL, -- name like "Regular Rice".
-  brand         VARCHAR(100) NULL, -- optional brand. NULL is fine here and the repository turns it into an empty string.
-  package_size  DECIMAL(10,2) NOT NULL, -- size of one pack like 1.00. DECIMAL avoids the rounding problems floats have.
-  unit          VARCHAR(30) NOT NULL, -- unit like kg or piece.
-  current_price DECIMAL(10,2) NOT NULL, -- the live price in pesos. only a reviewed price update should change it later.
-  is_available  BOOLEAN NOT NULL DEFAULT TRUE, -- MySQL stores this as 1 or 0. defaults to in stock.
-  last_updated  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- set on insert and refreshed on every update by MySQL itself.
-  created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- when the product was first added.
-  CONSTRAINT fk_product_stall FOREIGN KEY (stall_id) REFERENCES stall(id), -- RESTRICT, so a stall with products can't be removed.
-  CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES product_category(id) -- RESTRICT, so a category that's in use can't disappear.
+  id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  stall_id      INT UNSIGNED NOT NULL,
+  category_id   INT UNSIGNED NOT NULL,
+  product_name  VARCHAR(150) NOT NULL,
+  brand         VARCHAR(100) NULL,
+  package_size  DECIMAL(10,2) NOT NULL,
+  unit          VARCHAR(30) NOT NULL,
+  current_price DECIMAL(10,2) NOT NULL,
+  is_available  BOOLEAN NOT NULL DEFAULT TRUE,
+  approval_status      ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending', -- new products wait for the admin.
+  reviewed_by_admin_id INT UNSIGNED NULL, -- which admin decided, NULL until then.
+  reviewed_at          TIMESTAMP NULL DEFAULT NULL, -- when they decided.
+  last_updated  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_product_stall FOREIGN KEY (stall_id) REFERENCES stall(id),
+  CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES product_category(id),
+  CONSTRAINT fk_product_reviewer FOREIGN KEY (reviewed_by_admin_id) REFERENCES admin(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- starter rows so a vendor has a market and categories to pick when creating stalls and products. change or delete them anytime.
@@ -76,3 +80,17 @@ INSERT INTO product_category (category_name) VALUES -- adds common categories. c
   ('Vegetables'), -- id 3.
   ('Meat and Poultry'), -- id 4.
   ('Fish and Seafood'); -- id 5.
+
+CREATE TABLE IF NOT EXISTS product_update (
+  id                     INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- id of the price submission. counts up by itself.
+  product_id             INT UNSIGNED NOT NULL, -- which product the new price is for. UNSIGNED so it matches product.id exactly.
+  submitted_by_vendor_id INT UNSIGNED NOT NULL, -- the vendor who proposed the price. we set it from the login token, never from the request body.
+  reviewed_by_admin_id   INT UNSIGNED NULL, -- the admin who decided. NULL means nobody reviewed it yet.
+  proposed_price         DECIMAL(10,2) NOT NULL, -- the new price the vendor wants. I used a real number column instead of the ERD's proposed_values text so the approve step can copy it straight into product.current_price.
+  status                 ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending', -- ENUM only allows those 3 values. new submissions start as pending, which is the "Pending Review" badge on your page.
+  submitted_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- auto-filled when the vendor submits.
+  reviewed_at            TIMESTAMP NULL DEFAULT NULL, -- filled when the admin decides. the NULL DEFAULT NULL is there because MySQL timestamps otherwise auto-fill themselves.
+  CONSTRAINT fk_pupdate_product FOREIGN KEY (product_id) REFERENCES product(id), -- RESTRICT by default, so a product with submissions can't be deleted by accident.
+  CONSTRAINT fk_pupdate_vendor FOREIGN KEY (submitted_by_vendor_id) REFERENCES vendor(id), -- same, keeps the history.
+  CONSTRAINT fk_pupdate_admin FOREIGN KEY (reviewed_by_admin_id) REFERENCES admin(id) ON DELETE SET NULL -- if an admin account is deleted the submission stays and this becomes NULL.
+) ENGINE=InnoDB; -- InnoDB is needed for foreign keys and for the transaction we use when approving.
